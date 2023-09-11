@@ -78,28 +78,45 @@ function Index() {
       alert('Please agree to the terms.');
     }
   
-    if (selectedMainSector === '') {
+    if (selectedMainSector === '' && mainSectors.length !=0) {
       isValid = false;
       alert('Please select a main sector.');
     }
   
-    if (selectedSubSector === '') {
+    if (selectedSubSector === '' && subSectors.length !=0) {
       isValid = false;
       alert('Please select a sub sector.');
     }
   
-    if (selectedSubSubSector === '') {
+    if (selectedSubSubSector === '' && subSubSectors.length !=0) {
       isValid = false;
       alert('Please select a sub-sub sector.');
     }
   
     if (isValid) {
-      // Save data 
-      setName('');
-      setSelectedMainSector('');
-      setSelectedSubSector('');
-      setSelectedSubSubSector('');
-      setSelectedSubSubSubSector('');
+      const submitData=async()=>{
+        const response=await fetch("/api/users",{
+          method:'POST',
+          body: JSON.stringify({
+            "name":name,
+            "mainSectors":selectedMainSector,
+            "subSelectors":selectedSubSector,
+            "subSubSelector":selectedSubSubSector,
+            "subSubSubSelector":selectedSubSubSubSector
+          }),
+          headers:{
+            'content-type':'application/json'
+          }
+        })
+        const data=await response.json()
+        alert("Data posted successfully")
+      }
+      submitData()
+      // setName('');
+      // setSelectedMainSector('');
+      // setSelectedSubSector('');
+      // setSelectedSubSubSector('');
+      // setSelectedSubSubSubSector('');
     }
   };
   
