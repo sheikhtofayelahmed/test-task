@@ -7,6 +7,7 @@ function Index() {
   const [selectedMainSector, setSelectedMainSector] = useState('');
   const [selectedSubSector, setSelectedSubSector] = useState('');
   const [selectedSubSubSector, setSelectedSubSubSector] = useState('');
+  const [selectedSubSubSubSector, setSelectedSubSubSubSector] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,32 +34,75 @@ function Index() {
       ? Object.keys(jsonData[selectedMainSector][selectedSubSector])
       : [];
 
+  const subSubSubSectors =
+    jsonData[selectedMainSector] &&
+    jsonData[selectedMainSector][selectedSubSector] &&
+    jsonData[selectedMainSector][selectedSubSector][selectedSubSubSector]
+      ? Object.keys(jsonData[selectedMainSector][selectedSubSector][selectedSubSubSector])
+      : [];
+
   const handleMainSectorChange = (e) => {
     const value = e.target.value;
     setSelectedMainSector(value);
     setSelectedSubSector('');
     setSelectedSubSubSector('');
+    setSelectedSubSubSubSector('');
   };
 
   const handleSubSectorChange = (e) => {
     const value = e.target.value;
     setSelectedSubSector(value);
     setSelectedSubSubSector('');
+    setSelectedSubSubSubSector('');
+  };
+
+  const handleSubSubSectorChange = (e) => {
+    const value = e.target.value;
+    setSelectedSubSubSector(value);
+    setSelectedSubSubSubSector('');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //remains   
-    // Validation 
-
-    // Save data to the database 
-
-    // Clear the form after saving
-    setName('');
-    setSelectedMainSector('');
-    setSelectedSubSector('');
-    setSelectedSubSubSector('');
+  
+    let isValid = true;
+  
+    if (name.trim() === '') {
+      isValid = false;
+      alert('Please enter a name.');
+    }
+  
+    const agreeCheckbox = document.getElementById('agree');
+    if (!agreeCheckbox.checked) {
+      isValid = false;
+      alert('Please agree to the terms.');
+    }
+  
+    if (selectedMainSector === '') {
+      isValid = false;
+      alert('Please select a main sector.');
+    }
+  
+    if (selectedSubSector === '') {
+      isValid = false;
+      alert('Please select a sub sector.');
+    }
+  
+    if (selectedSubSubSector === '') {
+      isValid = false;
+      alert('Please select a sub-sub sector.');
+    }
+  
+    if (isValid) {
+      // Save data 
+      setName('');
+      setSelectedMainSector('');
+      setSelectedSubSector('');
+      setSelectedSubSubSector('');
+      setSelectedSubSubSubSector('');
+    }
   };
+  
 
   return (
     <div className={styles.container}>
@@ -79,22 +123,21 @@ function Index() {
           onChange={handleMainSectorChange}
           required
         >
-          <option value="">Select Main Sector</option>
+          <option value="">Choose One</option>
           {mainSectors.map((sector) => (
             <option key={sector} value={sector}>
               {sector}
             </option>
           ))}
         </select>
-
-        {selectedMainSector && (
+        {selectedMainSector && subSectors.length !==0 && (
           <div>
             <select
               value={selectedSubSector}
               onChange={handleSubSectorChange}
               required
             >
-              <option value="">Select Sub Sector</option>
+              <option value="">Choose One</option>
               {subSectors.map((subSector) => (
                 <option key={subSector} value={subSector}>
                   {subSector}
@@ -102,20 +145,37 @@ function Index() {
               ))}
             </select>
 
-            {selectedSubSector && (
+            {selectedSubSector && subSubSectors.length !==0 &&(
               <div>
                 <select
                   value={selectedSubSubSector}
-                  onChange={(e) => setSelectedSubSubSector(e.target.value)}
+                  onChange={handleSubSubSectorChange}
                   required
                 >
-                  <option value="">Select Sub-Sub Sector</option>
+                  <option value="">Choose One</option>
                   {subSubSectors.map((subSubSector) => (
                     <option key={subSubSector} value={subSubSector}>
                       {subSubSector}
                     </option>
                   ))}
                 </select>
+
+                {selectedSubSubSector && subSubSubSectors.length !==0 && (
+                  <div>
+                    <select
+                      value={selectedSubSubSubSector}
+                      onChange={(e) => setSelectedSubSubSubSector(e.target.value)}
+                      required
+                    >
+                      <option value="">Choose One</option>
+                      {subSubSubSectors.map((subSubSubSector) => (
+                        <option key={subSubSubSector} value={subSubSubSector}>
+                          {subSubSubSector}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
             )}
           </div>
